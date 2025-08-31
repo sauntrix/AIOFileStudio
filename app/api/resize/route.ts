@@ -1,6 +1,6 @@
 import sharp from 'sharp';
 
-export const runtime = 'edge'; // allow Vercel Edge, but sharp is native; you may change to 'nodejs' if issues
+export const runtime = 'nodejs'; // allow Vercel Edge, but sharp is native; you may change to 'nodejs' if issues
 
 export async function POST(req: Request) {
   try {
