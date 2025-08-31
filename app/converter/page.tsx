@@ -1,13 +1,13 @@
 'use client';
 
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useState } from 'react';
 import { motion } from 'framer-motion';
-import { RefreshCw, Upload, Download, Settings, FileText } from 'lucide-react';
+import { RefreshCw, Upload, Download, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ToolHero } from '@/components/ui/tool-hero';
 import { Dropzone } from '@/components/ui/dropzone';
 import { EmptyState } from '@/components/ui/empty-state';
@@ -34,12 +34,16 @@ export default function FileConverter() {
     updateFile(fileId, { status: 'processing', progress: 0 });
 
     if (conversionType === 'image-to-image' && file.file.type.startsWith('image/')) {
-      const result = await processImage(file.file, {
-        format: targetFormat === 'jpg' ? 'jpeg' : targetFormat as 'png' | 'webp',
-        quality: 0.9,
-      }, (progress) => {
-        updateFile(fileId, { progress });
-      });
+      const result = await processImage(
+        file.file,
+        {
+          format: targetFormat === 'jpg' ? 'jpeg' : (targetFormat as 'png' | 'webp'),
+          quality: 0.9,
+        },
+        (progress) => {
+          updateFile(fileId, { progress });
+        }
+      );
 
       if (result) {
         const resultUrl = URL.createObjectURL(result.blob);
@@ -56,7 +60,6 @@ export default function FileConverter() {
         });
       }
     } else {
-      // For non-image conversions, show not implemented message
       updateFile(fileId, {
         status: 'error',
         error: 'This conversion type is not yet implemented in the demo',
@@ -144,7 +147,7 @@ export default function FileConverter() {
                       description="Upload files to start converting. Multiple files supported for batch processing."
                       icon={Upload}
                     />
-                    
+
                     <div className="space-y-4">
                       <Tabs value={conversionType} onValueChange={setConversionType}>
                         <TabsList className="grid w-full grid-cols-3">
@@ -153,7 +156,7 @@ export default function FileConverter() {
                           <TabsTrigger value="word-to-pdf">Word → PDF</TabsTrigger>
                         </TabsList>
                       </Tabs>
-                      
+
                       <Dropzone
                         onDrop={handleDrop}
                         accept={getAcceptedTypes()}
@@ -178,7 +181,7 @@ export default function FileConverter() {
                         </Button>
                       )}
                     </div>
-                    
+
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {files.map(file => (
                         <FilePreview
@@ -190,7 +193,7 @@ export default function FileConverter() {
                         />
                       ))}
                     </div>
-                    
+
                     <Button
                       variant="outline"
                       onClick={clearFiles}
@@ -255,9 +258,11 @@ export default function FileConverter() {
                     </div>
 
                     <Button
-                      onClick={() => files.forEach(file => {
-                        if (file.status === 'idle') convertFile(file.id);
-                      })}
+                      onClick={() =>
+                        files.forEach(file => {
+                          if (file.status === 'idle') convertFile(file.id);
+                        })
+                      }
                       disabled={files.every(f => f.status !== 'idle') || isProcessing}
                       className="w-full focus-ring rounded-xl"
                       size="lg"
@@ -266,7 +271,7 @@ export default function FileConverter() {
                         <>
                           <motion.div
                             animate={{ rotate: 360 }}
-                            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                            transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
                             className="mr-2"
                           >
                             <RefreshCw className="w-4 h-4" />
